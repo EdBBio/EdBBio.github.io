@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Edson Silva-Júnior">
+
+<title>Edson Silva-Júnior - Quais variáveis escolher para o meu modelo?</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Edson Silva-Júnior</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Posts</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Formação e contatos</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-materiais-de-estudo" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Materiais de estudo</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-materiais-de-estudo">    
+        <li>
+    <a class="dropdown-item" href="../../slides_ecologia_numerica.pdf">
+ <span class="dropdown-text">slides Ecologia Numérica</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https:://instagram.com//edbbio"> <i class="bi bi-instagram" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com//edbbio"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com//edbbio"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../edson.nilton@gmail.ufpe"> <i class="bi bi-gmail" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Quais variáveis escolher para o meu modelo?</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">análise</div>
+                <div class="quarto-category">código</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Edson Silva-Júnior </p>
+            </div>
+    </div>
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#o-que-são-modelos" id="toc-o-que-são-modelos" class="nav-link active" data-scroll-target="#o-que-são-modelos"><strong>O que são modelos?</strong></a></li>
+  <li><a href="#importância-ecológica-e-biológica" id="toc-importância-ecológica-e-biológica" class="nav-link" data-scroll-target="#importância-ecológica-e-biológica"><strong>Importância ecológica e biológica</strong></a></li>
+  <li><a href="#multicolinearidade" id="toc-multicolinearidade" class="nav-link" data-scroll-target="#multicolinearidade"><strong>Multicolinearidade</strong></a>
+  <ul>
+  <li><a href="#remoção-de-multicolinearidade" id="toc-remoção-de-multicolinearidade" class="nav-link" data-scroll-target="#remoção-de-multicolinearidade">Remoção de multicolinearidade</a>
+  <ul>
+  <li><a href="#matriz-de-correlação" id="toc-matriz-de-correlação" class="nav-link" data-scroll-target="#matriz-de-correlação">Matriz de correlação</a></li>
+  <li><a href="#fatores-de-inflação-da-variância-variance-inflaction-factors---vif" id="toc-fatores-de-inflação-da-variância-variance-inflaction-factors---vif" class="nav-link" data-scroll-target="#fatores-de-inflação-da-variância-variance-inflaction-factors---vif">Fatores de Inflação da Variância (<em>Variance Inflaction Factors</em> - VIF)</a></li>
+  </ul></li>
+  <li><a href="#redução-através-análises-de-ordenação-irrestrita" id="toc-redução-através-análises-de-ordenação-irrestrita" class="nav-link" data-scroll-target="#redução-através-análises-de-ordenação-irrestrita">Redução através análises de ordenação irrestrita</a>
+  <ul>
+  <li><a href="#análise-de-componentes-principais-principal-components-analysis---pca" id="toc-análise-de-componentes-principais-principal-components-analysis---pca" class="nav-link" data-scroll-target="#análise-de-componentes-principais-principal-components-analysis---pca">Análise de Componentes Principais (<em>Principal Components Analysis</em> - PCA)</a></li>
+  <li><a href="#análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa" id="toc-análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa" class="nav-link" data-scroll-target="#análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa">Análise de Coordenadas Principais (<em>Principal Coordinates Analysis</em> - PCoA)</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#contribuição-para-o-modelo" id="toc-contribuição-para-o-modelo" class="nav-link" data-scroll-target="#contribuição-para-o-modelo"><strong>Contribuição para o modelo</strong></a>
+  <ul>
+  <li><a href="#estatísticas-de-variáveis-em-testes-de-hipótese-coeficiente-estimado-erro-padrão-e-estatísticas-t-e-z" id="toc-estatísticas-de-variáveis-em-testes-de-hipótese-coeficiente-estimado-erro-padrão-e-estatísticas-t-e-z" class="nav-link" data-scroll-target="#estatísticas-de-variáveis-em-testes-de-hipótese-coeficiente-estimado-erro-padrão-e-estatísticas-t-e-z">Estatísticas de variáveis em testes de hipótese (coeficiente estimado, erro padrão e estatísticas <em>T</em> e <em>Z</em>)</a></li>
+  <li><a href="#variáveis-mais-importantes-para-análises-de-ordenação-irrestrita" id="toc-variáveis-mais-importantes-para-análises-de-ordenação-irrestrita" class="nav-link" data-scroll-target="#variáveis-mais-importantes-para-análises-de-ordenação-irrestrita">Variáveis mais importantes para análises de ordenação irrestrita</a>
+  <ul>
+  <li><a href="#análise-de-componentes-principais-principal-components-analysis---pca-1" id="toc-análise-de-componentes-principais-principal-components-analysis---pca-1" class="nav-link" data-scroll-target="#análise-de-componentes-principais-principal-components-analysis---pca-1">Análise de Componentes Principais (<em>Principal Components Analysis</em> - PCA)</a></li>
+  <li><a href="#análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa-1" id="toc-análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa-1" class="nav-link" data-scroll-target="#análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa-1">Análise de Coordenadas Principais (<em>Principal Coordinates Analysis</em> - PCoA)</a></li>
+  </ul></li>
+  <li><a href="#variáveis-mais-importantes-para-análises-de-ordenação-restrita" id="toc-variáveis-mais-importantes-para-análises-de-ordenação-restrita" class="nav-link" data-scroll-target="#variáveis-mais-importantes-para-análises-de-ordenação-restrita">Variáveis mais importantes para análises de ordenação restrita</a>
+  <ul>
+  <li><a href="#análise-de-redundância-redundancy-analysis---rda" id="toc-análise-de-redundância-redundancy-analysis---rda" class="nav-link" data-scroll-target="#análise-de-redundância-redundancy-analysis---rda">Análise de Redundância (<em>Redundancy Analysis</em> - RDA)</a></li>
+  <li><a href="#análise-de-variância-multivariada-com-permutação-permutation-multivariaed-anova---permanova" id="toc-análise-de-variância-multivariada-com-permutação-permutation-multivariaed-anova---permanova" class="nav-link" data-scroll-target="#análise-de-variância-multivariada-com-permutação-permutation-multivariaed-anova---permanova">Análise de Variância Multivariada com Permutação (<em>Permutation Multivariaed ANOVA</em> - PERMANOVA)</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#análises-baseadas-em-simplicidade-dos-modelos" id="toc-análises-baseadas-em-simplicidade-dos-modelos" class="nav-link" data-scroll-target="#análises-baseadas-em-simplicidade-dos-modelos"><strong>Análises baseadas em simplicidade dos modelos</strong></a>
+  <ul>
+  <li><a href="#teste-de-grau-de-verossimilhança-likelyhood-ratio-test---lrt" id="toc-teste-de-grau-de-verossimilhança-likelyhood-ratio-test---lrt" class="nav-link" data-scroll-target="#teste-de-grau-de-verossimilhança-likelyhood-ratio-test---lrt">Teste de Grau de Verossimilhança (<em>Likelyhood Ratio Test</em> - LRT)</a></li>
+  <li><a href="#critério-de-informação-de-akaike-akaike-information-criterium---aic-e-critério-de-informação-bayesiana-bayesian-information-criterium---bic" id="toc-critério-de-informação-de-akaike-akaike-information-criterium---aic-e-critério-de-informação-bayesiana-bayesian-information-criterium---bic" class="nav-link" data-scroll-target="#critério-de-informação-de-akaike-akaike-information-criterium---aic-e-critério-de-informação-bayesiana-bayesian-information-criterium---bic">Critério de Informação de Akaike (<em>Akaike Information Criterium</em> - AIC) e Critério de informação Bayesiana (<em>Bayesian Information Criterium</em> - BIC)</a></li>
+  </ul></li>
+  <li><a href="#não-existe-modelo-perfeito" id="toc-não-existe-modelo-perfeito" class="nav-link" data-scroll-target="#não-existe-modelo-perfeito"><strong>Não existe modelo perfeito</strong></a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p><img src="image.png" class="img-fluid"></p>
+<p><strong>Uma análise sobre os principais métodos de escolha de variáveis de modelos, com aplicações em R</strong>.</p>
+<style>
+body {
+text-align: justify;
+font-size: 20px}
+blockquote {
+  background-color: #FAEFA6;
+  padding: 10px;
+  font-size: 14.5px
+}
+</style>
+<p>A Ecologia é a ciência responsável por tentar entender como os organismos reagem com a interação com o seu ambiente, incluindo outros organismos. Por causa disso, a ecologia utiliza de forte uso de modelagens matemáticas e estatísticas para medir se as relações pesquisadas existem e o quanto elas são fortes. Então como a ecologia trabalha em modelar relações dos seres vivos com o mundo, é importante que seus modelos estejam bem ajustados, minimizando os erros associados. Uma das etapas mais importantes da criação de um modelo é a escolha das principais variáveis utilizadas no mesmo. Aí entramos em uma das maiores perguntas quando se fala de modelos: quais são as variáveis que eu devo utilizar no meu modelo?</p>
+<section id="o-que-são-modelos" class="level1">
+<h1><strong>O que são modelos?</strong></h1>
+<p>A terceira década do século XXI (2021-2030) será marcada pelo uso de tecnologias que “pensam por si só”. Nesse época se fala muito dos modelos generativos de informação, como o famoso <a href="https://chat.openai.com/">ChatGPT</a>. E por mais que engenheiros de softwares voltados para Inteligências Artificiais e analistas de dados econômicos, com uma certa frequêncai, tentem reinvidicar que seus modelos são <em>perfeitos</em>, a realidade é que todos estão errados. Mas afinal, o que são modelos?</p>
+<p>Modelos, no contexto matemático e estatístico, são <em>tentativas</em> de representar fenômenos do mundo real para números e algorítimos, que gerem resultados que possam ser interpretados como a expressão destes fenômenos. Mas a palavra chave é exatamente essa: <em>tentativas</em>. Acontece que nenhum modelo consegue ser o fenômeno modelado de fato, mas sim partes deles. Alguns mais parecidos, outros menos. Mas, no fim, nenhum representa de fato os fenômenos estudados. A diferença entre os resultados que um modelo encontrou para o fenômeno do mundo real que este tentou modelar é o que chamamos de <code>erro</code>. Logo, quanto menos distância existe entre os resultados de um modelo e o que aquele fenômeno no mundo real é, menos errado o modelo em questão é. Dentro da ecologia, um exemplo clássico disso são os modelos de crescimento populacional, que não são perfeitas, possuem erros, mas são extremamente úteis nas tomadas de decisão envolvendo conservação de biodiversidade e controle de epidemias.</p>
+<p><img src="george.box.png" class="img-fluid"></p>
+<p>Existem diferentes formas de avaliar os erros de um modelo. Algumas das principais formas empregadas na Ecologia são:</p>
+<ol type="1">
+<li><p>A forma mais simples, que é apenas olhar para o que o modelo gerou e comparar o quão diferente isto é do fenômeno estudado;</p></li>
+<li><p>Com estatística descritiva, onde os erros podem ser medidos através de avaliações com medidas de tendência central, como a média (<span class="math inline">\(\bar{x}\)</span>, <span class="math inline">\(\mu\)</span>), aliadas à medidas de dispersão, como o desvio padrão (<span class="math inline">\(s\)</span>, <span class="math inline">\(\sigma\)</span>);</p></li>
+<li><p>Com estatística frequentista, através de testes de hipótese, os erros podem ser avaiados como a diferença entre a estatística calculada (testes <em>T</em>, <em>Z</em>, <em>W</em>, <em>F</em>, <em>X<sup>2</sup></em>, etc.) e a estatística crítica;</p></li>
+<li><p>Também relacionada à estatística frequentista, através de coeficientes, como o coeficiente de correlação (<em>r</em>) e o coeficiente de determinação (<em>R<sup>2</sup></em>), e resultados sobre significância daqueles resultados ao acaso (<em>valor de p</em>);</p></li>
+<li><p>Através de redução de dimensionalidade das variáveis, como na estatística multidimensional, a Análise de Componentes Principais (<em>Principal Components Analysis</em> - PCA), e a comparação dos autovalores das dimensões reduzidas;</p></li>
+<li><p>Qualquer outra forma matemática, estatística e/ou teórico-conceitual que permita medir o grau de <em>falha</em> de um modelo em medir um fenômeno de forma <em>perfeita</em>.</p></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>É importante destacar que a única coisa que reúne todas essas coisas, de diferentes tipos de modelos, interpretados como <code>erros</code> é o fato de que são os resultados de <em>falhas</em> na explição <em>perfeita</em> de um fenômeno do mundo real. Mas, de forma geral, diferentes tipos de modelos apresentam diferentes formas de expressar seus erros, então a forma de avaliar os erros de um modelo precisa ser adequada não apenas para as naturezas matemáticas do modelo avaliados, mas também para a teoria biológica por trás da medição daquele modelo. Um mesmo modelo pode estar mais errado ou menos errado, com os mesmos dados e sem alterar seus parâmetros, a depender da forma e das ferramentas com o qual este foi avaliado.</p>
+</div>
+</div>
+<p>E no que exatamente isso afeta na escolha de variáveis para um modelo? Adicionalmente ao que foi citado no <code>tópico 1</code> da lista anterior, a escolha de variáveis pouco relevantes para um modelo pode fazer com que seu erro aumente, já que estas não apresentam de fato importância real para o fenômeno estudado, por diferentes motivos. Desta forma, a escolha das melhores variáveis de um modelo também influencia no seu desempenho.</p>
+<p>A seguir, veremos as principais formas utilizadas dentro da ecologia para a escolha de variáveis, abordando a teoria e a prática utilizando linguagem de programação R.</p>
+</section>
+<section id="importância-ecológica-e-biológica" class="level1">
+<h1><strong>Importância ecológica e biológica</strong></h1>
+<p>Antes de qualquer análise estatística, é importante que suas variáveis façam <code>sentido ecológico e biológico</code>.</p>
+<p>Uma confusão relativamente frequente quando se trabalha com ciência de dados é coletar o máximo de váriáveis possíveis nos modelos e assumir que as que apresentaram os maiores desempenhos são os fatores com maior influências para o fenômeno estudado. O grande erro disso é que qualquer uma dessas análises só medem relações matemáticas, mas isso não significa que essas relaçõees de fato existem. Para exemplificar de forma mais clara esses efeitos, um site ótimo é o <a href="https://www.tylervigen.com/spurious-correlations">Spurious Correlations</a> (<em>Correlações Espúrias</em>, em inglês): esse site mostra como coisas sem correlação alguma no mundo real podem apresentar correlações matemáticas dos seus dados, ou, como seu nome sugere, correlações espúrias.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.tylervigen.com/spurious/correlation/image/1508_the-number-of-films-in-sylvester-stallones-filmography_correlates-with_the-number-of-millwrights-in-north-dakota.svg" class="img-fluid figure-img"></p>
+<figcaption><a href="https://www.tylervigen.com/spurious/correlation/1508_the-number-of-films-in-sylvester-stallones-filmography_correlates-with_the-number-of-millwrights-in-north-dakota">Relação entre o número cumulativo de filmes do Silvester Stalone ao longo dos anos om o número cumulativo de marcenarias no estado Norte Americano da Dakota do Norte ao longo dos anos</a></figcaption>
+</figure>
+</div>
+<p>Esses problemas se tornam mais graves quando lembramos que, em contextos ecológicos, variáveis ambientais (sejam bióticas ou abióticas) podem ou não ter influência, dependendo do objeto de estudo. A título de exemplo, Russildi <em>et al.</em> (<a href="https://link.springer.com/article/10.1007/s10531-016-1056-3">2016</a>), ao avaliarem os fatores que mais influenciavam a diversidade de anfíbios e répteis em florestas tropicais no México, encontraram que a diversidade de anfíbios e répteis são ambos influenciados por maiores precipitações, mas anfíbios sofreram mais influência de temperaturas menores e maior quantidade de corpos d’água próximos, enquanto que répteis sofreram maior influência das formas dos fragmentos e maiores temperaturas. Note que é o mesmo recorte geográfico e temporal, mas diferentes grupos sofreram influências de diferentes variáveis.</p>
+<p>Por causa disso, o primeiro passo na construção de um modelo <code>útil</code> é conhecer a ecologia e a biologia do objeto estudado. Conhecer a biologia, a história natural, a ecofisiologia, interações bióticas e quaisquer informações ecológicas relevantes do seu objeto de estudo é fundamental para que seu modelo esteja menos errado, minimizando esforços e recursos desperdiçados com variáveis pouco interessantes para responder a pergunta de pesquisa em questão.</p>
+</section>
+<section id="multicolinearidade" class="level1">
+<h1><strong>Multicolinearidade</strong></h1>
+<p>A Multicolinearidade pode ser definida quando diferentes variáveis variam de foram semelhante, ou sejam: <code>apresentam linearidades semelhantes</code>. Nos estudos ecológicos, isso apresenta dois grandes problemas:</p>
+<ol type="1">
+<li><p>Na natureza, é extremamente comum que fatores ambientais apresentem correção, e então sofram de multicolinearidade. Um exemplo clássico disso é a temperatura e a umidade de um local: na maioria dos ecossistemas terrestres, sobretudo nos trópicos, é normal que áreas com maiores taxas de umidade apresentem menor temperatura, e vice-versa. Outro exemplo comum desses fenômenos em ecossistemas terrestres tropicais é a correlação entre diversidade de organismos saxicólas (organismos que vivem em serrapilheira) e o grau de abertura de dossel;</p></li>
+<li><p>Diversos tipos de modelos utilizados para analisar fenômenos ecológicos partem da premissa de independência das unidades amostrais: cada ponto, local e repetição dos dados precisam ser informações novas, que os seus valores não dependam dos outros valores dos outros pontos, mesmo que estes apresentem valores semelhantes. Quando essa premissa não é obedecida, o modelo se torna inflado, e então este acaba gerando mais influência para uma tendência de dados não por ela, biologica, ecológica e matematicamente, fazer mais sentido, mas sim pelo fato desta informação se tornar repetida.</p></li>
+</ol>
+<p>Devido a estes dois principais fatores, um parte importantes dos modelos ecológicos envolvem não apenas detectar, mas lidar com a multicolinearidade das variáveis.</p>
+<section id="remoção-de-multicolinearidade" class="level2">
+<h2 class="anchored" data-anchor-id="remoção-de-multicolinearidade">Remoção de multicolinearidade</h2>
+<p>A técnica mais simples envolvendo lidar com multicolinearidade é a remoção de variáveis que apresentam correlação, selecionando, de forma manual e baseado na biologia e ecologia do objeto de estudo, as variáveis mais interessantes para responder a pergunta ecológica.</p>
+<section id="matriz-de-correlação" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-de-correlação">Matriz de correlação</h3>
+<p>Uma forma simples de detectar e medir a correlação entre variáveis de um modelo é através dos <code>índices de correlação</code>: índices matemáticos que calculam não apenas se duas ou mais variáveis variam de forma semelhante, mas o quanto essa correlção é forte.</p>
+<p>Existem diferentes métodos para isso, mas os dois principais dentro de estudos ecológicos são os <code>Índice de Pearson</code> e <code>Índice de Spearman</code>: o Índice de Pearson mede correlações lineares, enquanto que o índice de Spearman mede correlações não lineares. Estes índices variam de -1 a 1, funcionando da seguinte forma:</p>
+<ul>
+<li><p>r = 1: correlação diretamente proporcional perfeita.</p></li>
+<li><p>r = 0: ausência de correlação;</p></li>
+<li><p>r = -1: correlação inversamente proporcional perfeita.</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Sobre a escolha entre os Índices de Pearson e Spearman">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Sobre a escolha entre os Índices de Pearson e Spearman
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A escolhas entre os índices de Pearson e Spearman é uma discussão bastante antiga dentro da estatística, com diversos campos de estudo apontando motivos para escolher entre um e outro. Dentro da ecologia, quando se deseja identificar e medir multicolinearidade entre variáveis ambientais, a maioria dos pesquisadores empregam o Índice de Spearman, divido a relação entre diversas variáveis ambientais não ocorrer de forma linear. Contudo, é importante que a escolha entre esses índices sejam pensado para cada estudo como um caso em particular</p>
+</div>
+</div>
+<p>Para o nosso exemplo, imagine a seguinte situação: você está estudando a relação entre a taxa de herbivoria que três espécies de flores do gênero <em>Iris</em> (<em>I. setosa</em>, <em>I. versicolor</em>, <em>I. virginica</em>) sofrem e a morfometria de suas pétalas e sápalas, tendo dados do comprimento e largura das pétalas e sépalas dos indivíduos das três espécies. Antes de criar um modelo você irá testar a multicolinearidade através de índices de correlação. Para esse exemplo, serão usados tanto o índice de Pearson quando de Spearman.</p>
+<p>Para o código em R, usaremos o dataset <code>iris</code>, nativo do R, e os pacotes <code>tidyverse</code>, para o tratamento e a visualização de dados e <code>reshape2</code>, para a transformação da matriz de correlação.</p>
+<p>Primeiro, vamos carregar nossos pacotes. Certifique-se que estão instalados antes de começar.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carregando os pacotes</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'reshape2'
+
+The following object is masked from 'package:tidyr':
+
+    smiths</code></pre>
+</div>
+</div>
+<p>Em seguida, vamos carregar nossa base de dados, através da função <code>data()</code>, informando o nome da base de dados entre aspas, e então chamando-a.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carreando a base de dados</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"iris"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizando a base de dados</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"5.1","2":"3.5","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.0","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.7","2":"3.2","3":"1.3","4":"0.2","5":"setosa"},{"1":"4.6","2":"3.1","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.6","3":"1.4","4":"0.2","5":"setosa"},{"1":"5.4","2":"3.9","3":"1.7","4":"0.4","5":"setosa"},{"1":"4.6","2":"3.4","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.0","2":"3.4","3":"1.5","4":"0.2","5":"setosa"},{"1":"4.4","2":"2.9","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.1","5":"setosa"},{"1":"5.4","2":"3.7","3":"1.5","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.4","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.0","3":"1.4","4":"0.1","5":"setosa"},{"1":"4.3","2":"3.0","3":"1.1","4":"0.1","5":"setosa"},{"1":"5.8","2":"4.0","3":"1.2","4":"0.2","5":"setosa"},{"1":"5.7","2":"4.4","3":"1.5","4":"0.4","5":"setosa"},{"1":"5.4","2":"3.9","3":"1.3","4":"0.4","5":"setosa"},{"1":"5.1","2":"3.5","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.7","2":"3.8","3":"1.7","4":"0.3","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.5","4":"0.3","5":"setosa"},{"1":"5.4","2":"3.4","3":"1.7","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.7","3":"1.5","4":"0.4","5":"setosa"},{"1":"4.6","2":"3.6","3":"1.0","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.3","3":"1.7","4":"0.5","5":"setosa"},{"1":"4.8","2":"3.4","3":"1.9","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.0","3":"1.6","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.4","3":"1.6","4":"0.4","5":"setosa"},{"1":"5.2","2":"3.5","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.2","2":"3.4","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.7","2":"3.2","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.1","3":"1.6","4":"0.2","5":"setosa"},{"1":"5.4","2":"3.4","3":"1.5","4":"0.4","5":"setosa"},{"1":"5.2","2":"4.1","3":"1.5","4":"0.1","5":"setosa"},{"1":"5.5","2":"4.2","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.2","3":"1.2","4":"0.2","5":"setosa"},{"1":"5.5","2":"3.5","3":"1.3","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.6","3":"1.4","4":"0.1","5":"setosa"},{"1":"4.4","2":"3.0","3":"1.3","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.4","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.5","3":"1.3","4":"0.3","5":"setosa"},{"1":"4.5","2":"2.3","3":"1.3","4":"0.3","5":"setosa"},{"1":"4.4","2":"3.2","3":"1.3","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.5","3":"1.6","4":"0.6","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.9","4":"0.4","5":"setosa"},{"1":"4.8","2":"3.0","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.6","2":"3.2","3":"1.4","4":"0.2","5":"setosa"},{"1":"5.3","2":"3.7","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.3","3":"1.4","4":"0.2","5":"setosa"},{"1":"7.0","2":"3.2","3":"4.7","4":"1.4","5":"versicolor"},{"1":"6.4","2":"3.2","3":"4.5","4":"1.5","5":"versicolor"},{"1":"6.9","2":"3.1","3":"4.9","4":"1.5","5":"versicolor"},{"1":"5.5","2":"2.3","3":"4.0","4":"1.3","5":"versicolor"},{"1":"6.5","2":"2.8","3":"4.6","4":"1.5","5":"versicolor"},{"1":"5.7","2":"2.8","3":"4.5","4":"1.3","5":"versicolor"},{"1":"6.3","2":"3.3","3":"4.7","4":"1.6","5":"versicolor"},{"1":"4.9","2":"2.4","3":"3.3","4":"1.0","5":"versicolor"},{"1":"6.6","2":"2.9","3":"4.6","4":"1.3","5":"versicolor"},{"1":"5.2","2":"2.7","3":"3.9","4":"1.4","5":"versicolor"},{"1":"5.0","2":"2.0","3":"3.5","4":"1.0","5":"versicolor"},{"1":"5.9","2":"3.0","3":"4.2","4":"1.5","5":"versicolor"},{"1":"6.0","2":"2.2","3":"4.0","4":"1.0","5":"versicolor"},{"1":"6.1","2":"2.9","3":"4.7","4":"1.4","5":"versicolor"},{"1":"5.6","2":"2.9","3":"3.6","4":"1.3","5":"versicolor"},{"1":"6.7","2":"3.1","3":"4.4","4":"1.4","5":"versicolor"},{"1":"5.6","2":"3.0","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.8","2":"2.7","3":"4.1","4":"1.0","5":"versicolor"},{"1":"6.2","2":"2.2","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.6","2":"2.5","3":"3.9","4":"1.1","5":"versicolor"},{"1":"5.9","2":"3.2","3":"4.8","4":"1.8","5":"versicolor"},{"1":"6.1","2":"2.8","3":"4.0","4":"1.3","5":"versicolor"},{"1":"6.3","2":"2.5","3":"4.9","4":"1.5","5":"versicolor"},{"1":"6.1","2":"2.8","3":"4.7","4":"1.2","5":"versicolor"},{"1":"6.4","2":"2.9","3":"4.3","4":"1.3","5":"versicolor"},{"1":"6.6","2":"3.0","3":"4.4","4":"1.4","5":"versicolor"},{"1":"6.8","2":"2.8","3":"4.8","4":"1.4","5":"versicolor"},{"1":"6.7","2":"3.0","3":"5.0","4":"1.7","5":"versicolor"},{"1":"6.0","2":"2.9","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.7","2":"2.6","3":"3.5","4":"1.0","5":"versicolor"},{"1":"5.5","2":"2.4","3":"3.8","4":"1.1","5":"versicolor"},{"1":"5.5","2":"2.4","3":"3.7","4":"1.0","5":"versicolor"},{"1":"5.8","2":"2.7","3":"3.9","4":"1.2","5":"versicolor"},{"1":"6.0","2":"2.7","3":"5.1","4":"1.6","5":"versicolor"},{"1":"5.4","2":"3.0","3":"4.5","4":"1.5","5":"versicolor"},{"1":"6.0","2":"3.4","3":"4.5","4":"1.6","5":"versicolor"},{"1":"6.7","2":"3.1","3":"4.7","4":"1.5","5":"versicolor"},{"1":"6.3","2":"2.3","3":"4.4","4":"1.3","5":"versicolor"},{"1":"5.6","2":"3.0","3":"4.1","4":"1.3","5":"versicolor"},{"1":"5.5","2":"2.5","3":"4.0","4":"1.3","5":"versicolor"},{"1":"5.5","2":"2.6","3":"4.4","4":"1.2","5":"versicolor"},{"1":"6.1","2":"3.0","3":"4.6","4":"1.4","5":"versicolor"},{"1":"5.8","2":"2.6","3":"4.0","4":"1.2","5":"versicolor"},{"1":"5.0","2":"2.3","3":"3.3","4":"1.0","5":"versicolor"},{"1":"5.6","2":"2.7","3":"4.2","4":"1.3","5":"versicolor"},{"1":"5.7","2":"3.0","3":"4.2","4":"1.2","5":"versicolor"},{"1":"5.7","2":"2.9","3":"4.2","4":"1.3","5":"versicolor"},{"1":"6.2","2":"2.9","3":"4.3","4":"1.3","5":"versicolor"},{"1":"5.1","2":"2.5","3":"3.0","4":"1.1","5":"versicolor"},{"1":"5.7","2":"2.8","3":"4.1","4":"1.3","5":"versicolor"},{"1":"6.3","2":"3.3","3":"6.0","4":"2.5","5":"virginica"},{"1":"5.8","2":"2.7","3":"5.1","4":"1.9","5":"virginica"},{"1":"7.1","2":"3.0","3":"5.9","4":"2.1","5":"virginica"},{"1":"6.3","2":"2.9","3":"5.6","4":"1.8","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.8","4":"2.2","5":"virginica"},{"1":"7.6","2":"3.0","3":"6.6","4":"2.1","5":"virginica"},{"1":"4.9","2":"2.5","3":"4.5","4":"1.7","5":"virginica"},{"1":"7.3","2":"2.9","3":"6.3","4":"1.8","5":"virginica"},{"1":"6.7","2":"2.5","3":"5.8","4":"1.8","5":"virginica"},{"1":"7.2","2":"3.6","3":"6.1","4":"2.5","5":"virginica"},{"1":"6.5","2":"3.2","3":"5.1","4":"2.0","5":"virginica"},{"1":"6.4","2":"2.7","3":"5.3","4":"1.9","5":"virginica"},{"1":"6.8","2":"3.0","3":"5.5","4":"2.1","5":"virginica"},{"1":"5.7","2":"2.5","3":"5.0","4":"2.0","5":"virginica"},{"1":"5.8","2":"2.8","3":"5.1","4":"2.4","5":"virginica"},{"1":"6.4","2":"3.2","3":"5.3","4":"2.3","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.5","4":"1.8","5":"virginica"},{"1":"7.7","2":"3.8","3":"6.7","4":"2.2","5":"virginica"},{"1":"7.7","2":"2.6","3":"6.9","4":"2.3","5":"virginica"},{"1":"6.0","2":"2.2","3":"5.0","4":"1.5","5":"virginica"},{"1":"6.9","2":"3.2","3":"5.7","4":"2.3","5":"virginica"},{"1":"5.6","2":"2.8","3":"4.9","4":"2.0","5":"virginica"},{"1":"7.7","2":"2.8","3":"6.7","4":"2.0","5":"virginica"},{"1":"6.3","2":"2.7","3":"4.9","4":"1.8","5":"virginica"},{"1":"6.7","2":"3.3","3":"5.7","4":"2.1","5":"virginica"},{"1":"7.2","2":"3.2","3":"6.0","4":"1.8","5":"virginica"},{"1":"6.2","2":"2.8","3":"4.8","4":"1.8","5":"virginica"},{"1":"6.1","2":"3.0","3":"4.9","4":"1.8","5":"virginica"},{"1":"6.4","2":"2.8","3":"5.6","4":"2.1","5":"virginica"},{"1":"7.2","2":"3.0","3":"5.8","4":"1.6","5":"virginica"},{"1":"7.4","2":"2.8","3":"6.1","4":"1.9","5":"virginica"},{"1":"7.9","2":"3.8","3":"6.4","4":"2.0","5":"virginica"},{"1":"6.4","2":"2.8","3":"5.6","4":"2.2","5":"virginica"},{"1":"6.3","2":"2.8","3":"5.1","4":"1.5","5":"virginica"},{"1":"6.1","2":"2.6","3":"5.6","4":"1.4","5":"virginica"},{"1":"7.7","2":"3.0","3":"6.1","4":"2.3","5":"virginica"},{"1":"6.3","2":"3.4","3":"5.6","4":"2.4","5":"virginica"},{"1":"6.4","2":"3.1","3":"5.5","4":"1.8","5":"virginica"},{"1":"6.0","2":"3.0","3":"4.8","4":"1.8","5":"virginica"},{"1":"6.9","2":"3.1","3":"5.4","4":"2.1","5":"virginica"},{"1":"6.7","2":"3.1","3":"5.6","4":"2.4","5":"virginica"},{"1":"6.9","2":"3.1","3":"5.1","4":"2.3","5":"virginica"},{"1":"5.8","2":"2.7","3":"5.1","4":"1.9","5":"virginica"},{"1":"6.8","2":"3.2","3":"5.9","4":"2.3","5":"virginica"},{"1":"6.7","2":"3.3","3":"5.7","4":"2.5","5":"virginica"},{"1":"6.7","2":"3.0","3":"5.2","4":"2.3","5":"virginica"},{"1":"6.3","2":"2.5","3":"5.0","4":"1.9","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.2","4":"2.0","5":"virginica"},{"1":"6.2","2":"3.4","3":"5.4","4":"2.3","5":"virginica"},{"1":"5.9","2":"3.0","3":"5.1","4":"1.8","5":"virginica"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Para calcularmos a multicolinearidade, primeiro temos que selecionar apenas as variáveis numéricas, com as funções <code>dplyr::select()</code>, para selecionar colunas, e <code>dplyr::where()</code>, para informar que apenas serão selecionadas as variáveis numéricas (<code>is.numeric</code>), ambas do pacote <code>dplyr</code>, que faz parte dos pacotes carregados pelo <code>tidyverse</code>. Em seguida, utilizaremos a função nativa <code>cor()</code>, informando que será utilizado o índice de Pearson (<code>method = "pearson"</code>). Tudo isso atribuido (operador <code>&lt;-</code>) ao objeto <code>cor_pearson</code></p>
+<div class="callout callout-style-default callout-note callout-titled" title="Sobre a estrutura das funçãoes e o operador %>%">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Sobre a estrutura das funçãoes e o operador %&gt;%
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note que as funções estão se operando uma após a outra, ao invés de todas estarem aninhadas umas dentros das outras. Isso significa que uma função está recendo os dados gerados pela função anterior. Isso é possível através do pipe (<code>%&gt;%</code>), que é ativado quando o pacote <code>tidyverse</code> é ativado. Ele permite deixar o código mais legível e menos confuso.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlação de Pearson</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>cor_pearson <span class="ot">&lt;-</span> iris  <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dplyr<span class="sc">::</span><span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span> <span class="co"># selecionando apenas as variáveis com dados numéricos</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">method =</span> <span class="st">"pearson"</span>) <span class="co"># especificando que o índice é o de Pearson</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Matriz de correlação</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>cor_pearson</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Sepal.Length Sepal.Width Petal.Length Petal.Width
+Sepal.Length    1.0000000  -0.1175698    0.8717538   0.8179411
+Sepal.Width    -0.1175698   1.0000000   -0.4284401  -0.3661259
+Petal.Length    0.8717538  -0.4284401    1.0000000   0.9628654
+Petal.Width     0.8179411  -0.3661259    0.9628654   1.0000000</code></pre>
+</div>
+</div>
+<p>Note que a variável do comprimento da sépala (<code>Sepal.Length</code>) está altamente correlacionada com as variáveis de comprimento e largura das pétalas (<code>Petal.Length</code> e <code>Petal.Width</code>, respectivamente), devido seu alto valor de correlação (r &gt; 0.7). Para ajudar na interpretação, podemos criar um gráfico para visualizar estas relações, através de <a href="https://ggplot2.tidyverse.org/">ggplot</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Gráfico</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>cor_pearson[<span class="fu">upper.tri</span>(cor_pearson)] <span class="ot">&lt;-</span> <span class="cn">NA</span> <span class="co"># removendo a matriz triangular superior através de transforma-la em NA</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>cor_pearson <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  reshape2<span class="sc">::</span><span class="fu">melt</span>() <span class="sc">%&gt;%</span> <span class="co"># ajustando a matriz para um formato de data frame</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> <span class="co"># removendo os NAs gerados</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Var1, Var2, <span class="at">fill =</span> value)) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> value <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>))) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Índice de Correllação"</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">option =</span> <span class="st">"turbo"</span>, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_colorbar</span>(<span class="at">title.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                               <span class="at">title.hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                               <span class="at">barwidth =</span> <span class="dv">25</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                               <span class="at">barheight =</span> <span class="fl">1.5</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                               <span class="at">frame.colour =</span> <span class="st">"black"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                               <span class="at">ticks.colour =</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="dv">1</span>),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> ggplot2<span class="sc">::</span><span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.line =</span> ggplot2<span class="sc">::</span><span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background =</span> ggplot2<span class="sc">::</span><span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>),</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vamos então repetir o mesmo processo, mas agora para Spearman.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlação de Spearman</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>cor_spearman <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dplyr<span class="sc">::</span><span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span> <span class="co"># selecionando apenas as variáveis com dados numéricos</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">method =</span> <span class="st">"spearman"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Matriz de correlação</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>cor_spearman</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Sepal.Length Sepal.Width Petal.Length Petal.Width
+Sepal.Length    1.0000000  -0.1667777    0.8818981   0.8342888
+Sepal.Width    -0.1667777   1.0000000   -0.3096351  -0.2890317
+Petal.Length    0.8818981  -0.3096351    1.0000000   0.9376668
+Petal.Width     0.8342888  -0.2890317    0.9376668   1.0000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Gráfico</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>cor_spearman[<span class="fu">upper.tri</span>(cor_spearman)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>cor_spearman <span class="sc">%&gt;%</span> </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  reshape2<span class="sc">::</span><span class="fu">melt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Var1, Var2, <span class="at">fill =</span> value)) <span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> value <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>))) <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Índice de Correllação"</span>) <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">option =</span> <span class="st">"turbo"</span>, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_colorbar</span>(<span class="at">title.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                               <span class="at">title.hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                               <span class="at">barwidth =</span> <span class="dv">25</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                               <span class="at">barheight =</span> <span class="fl">1.5</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                               <span class="at">frame.colour =</span> <span class="st">"black"</span>,</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>                               <span class="at">ticks.colour =</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="dv">1</span>),</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> ggplot2<span class="sc">::</span><span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.line =</span> ggplot2<span class="sc">::</span><span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background =</span> ggplot2<span class="sc">::</span><span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>),</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note que, tanto para Pearson quanto Spearman, a combinação sem multicolinearidade é o comprimento e largura da sépala, se seguirmos o nosso ponto de corte como r &gt; |0.7|.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Sobre o uso do operador | |">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Sobre o uso do operador | |
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Na matemática, usamos a expressão <code>| |</code> para informar que o número pode assumir tantos valores positivos quanto negativos. Ou seja r &gt; |0.7| = r &gt; 0.7 ou r &lt; -0.7.</p>
+<p>Também vale destacar que esse valor é arbitário, e qualquer outro valor, desde que faça sentido, poderia ser utilizado.</p>
+</div>
+</div>
+</section>
+<section id="fatores-de-inflação-da-variância-variance-inflaction-factors---vif" class="level3">
+<h3 class="anchored" data-anchor-id="fatores-de-inflação-da-variância-variance-inflaction-factors---vif">Fatores de Inflação da Variância (<em>Variance Inflaction Factors</em> - VIF)</h3>
+<p>Outra forma de detectar a multicolinearidade é através da criação prévia dos modelos, e então os ajustar. Isso pode ser uma vantagem, principalmente, porque, mesmo após a remoção de multicolinearidade através da remoção de variáveis correlacionadas, é possível que o modelo esteja inflado, devido à natureza matemática das variáveis. Por causa disso, uma alternativa é análise de Fatores de inflação da Variância (<em>Variance Inflaction Factors</em> - VIF).</p>
+<p>o VIF é uma análise que avalia quantififando o quanto o erro padrão dos coeficientes estimados (<span class="math inline">\(\beta\)</span> de uma regressão, por exemplo) se tornaram inflados, devido à multicolinearidade das variáveis do modelo. A vantagem deste método é que ele avalia o modelo pronto, e não apenas as suas variáveis, informando se o modelo precisa ou não que alguma variável seja removida.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Sobre o que são os coeficientes estimados">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Sobre o que são os coeficientes estimados
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Em modelos que testam se uma ou mais variáveis influenciam o comportamento de um grupo de dados, como na regressão linear, coeficientes estimados são uma estimativa média do quanto a variação dos preditores de um modelo afetam a variação dos dados das variáveis respostas. Por exemplo, se criarmos um modelo para estimar o quanto a predação (incidência de predadores) afeta a frequência de cantos de anfíbios (Hz), e o coeficiente estimado for -15,5, isso significa que para cada aumento em 1 nos valores dos dados de predação, os valores dos dados de frequência de canto diminuem em 15,5.</p>
+<p>Contudo, essa relação não ocorre de forma perfeita. No nosso exemplo, diferentes indivíduos de anfíbios, mesmo da mesma espécie, responderão de forma de diferente à predação, devido a fatores como tamanho do corpo, morfomoetria de membros e orgãos, ecofisioloigia, estado de nutrição e hidratação, genética e até personalidade individual. Por isso os coeficientes estimados são <code>médias</code>, não valores absolutos. Assim, algumas unidades amostrais serão mais afetadas e outras menos afetadas, alguns sendo afetadas para diminuir -16,7 e outras a diminuir -11,63. Por isso, é utilizado a estimativa do erro padrão, em conjunto com os coeficientes estimados (<span class="math inline">\(\mu \pm S \bar{x}\)</span>), já que um erro padrão baixo significa que que os valores do quanto as unidades amostrais são afetadas orbitam muito próximos da média, o que significa, no nosso exemplo, que a relação de influência da predação sobre a frequência do canto dos anfíbios é constante e sofre poucas variância. No nosso exemplo, um coeficiente de determinação com erro padrão = <span class="math inline">\(15,5 \pm 0,89\)</span> representa uma grande constância da influência da predação sobre a redução das frequências de canto dos anfíbios.</p>
+</div>
+</div>
+<p>Todas as variáveis de um modelo possuem um valor de VIF associado, o que significa que as variáveis que serão removidas não são aquelas que apresentam um valor discriminante, mas sim que estão fora de um intervalo considerado “permitido”. Alguns autores sugerem que o limite seja de 10, então variáveis com VIF &gt; 10 seriam removidas, enquanto outros autores, mais conservadores, recomendam que seja valores como 5, outro 3 e alguns até 2. Em estudos ecológicos, é comum que o valores de cortes estejam entre 3 e 4 (<a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.2041-210X.2009.00001.x">Zuur <em>et al</em> 2010</a>, <a href="https://nsojournals.onlinelibrary.wiley.com/doi/pdf/10.1111/j.1600-0587.2012.07348.x?casa_token=A-efbPnqtuYAAAAA%3AbEwG0SIq5JHta0lto5kwWBbL6kDmZkQlS16JrXQARyFWDRMBkfYzTxoNtcdMOwkrH3ziiiDyz1796XLMzw">Dormann <em>et al</em> 2013</a>)</p>
+<p>Vamos continuar o nosso exemplo das flores do gênero <em>Iris</em>, mas agora vamos simular dados de herbivoria, e criar um modelo linear. Para isso, vamos criar mais uma variável da taxa de herbivoria, através da função <code>dplyr::mutate()</code>, do pacote <code>dplyr</code>, e da função <code>sample()</code>, que é nativa do R, atribuindo isso ao objeto <code>iris_pred</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3214</span>) <span class="co"># controlando a leatoriedade, assim sempre será a mesma sequência aleatória de dados</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>iris_pred <span class="ot">&lt;-</span> iris <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(Predação <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">10000000</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>), <span class="at">size =</span> <span class="dv">150</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>iris_pred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fct"],"align":["left"]},{"label":["Predação"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"5.1","2":"3.5","3":"1.4","4":"0.2","5":"setosa","6":"0.672"},{"1":"4.9","2":"3.0","3":"1.4","4":"0.2","5":"setosa","6":"0.011"},{"1":"4.7","2":"3.2","3":"1.3","4":"0.2","5":"setosa","6":"0.362"},{"1":"4.6","2":"3.1","3":"1.5","4":"0.2","5":"setosa","6":"0.425"},{"1":"5.0","2":"3.6","3":"1.4","4":"0.2","5":"setosa","6":"0.195"},{"1":"5.4","2":"3.9","3":"1.7","4":"0.4","5":"setosa","6":"0.112"},{"1":"4.6","2":"3.4","3":"1.4","4":"0.3","5":"setosa","6":"0.099"},{"1":"5.0","2":"3.4","3":"1.5","4":"0.2","5":"setosa","6":"0.224"},{"1":"4.4","2":"2.9","3":"1.4","4":"0.2","5":"setosa","6":"0.891"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.1","5":"setosa","6":"0.977"},{"1":"5.4","2":"3.7","3":"1.5","4":"0.2","5":"setosa","6":"0.951"},{"1":"4.8","2":"3.4","3":"1.6","4":"0.2","5":"setosa","6":"0.334"},{"1":"4.8","2":"3.0","3":"1.4","4":"0.1","5":"setosa","6":"0.970"},{"1":"4.3","2":"3.0","3":"1.1","4":"0.1","5":"setosa","6":"0.525"},{"1":"5.8","2":"4.0","3":"1.2","4":"0.2","5":"setosa","6":"0.522"},{"1":"5.7","2":"4.4","3":"1.5","4":"0.4","5":"setosa","6":"0.817"},{"1":"5.4","2":"3.9","3":"1.3","4":"0.4","5":"setosa","6":"0.878"},{"1":"5.1","2":"3.5","3":"1.4","4":"0.3","5":"setosa","6":"0.413"},{"1":"5.7","2":"3.8","3":"1.7","4":"0.3","5":"setosa","6":"0.318"},{"1":"5.1","2":"3.8","3":"1.5","4":"0.3","5":"setosa","6":"0.455"},{"1":"5.4","2":"3.4","3":"1.7","4":"0.2","5":"setosa","6":"0.881"},{"1":"5.1","2":"3.7","3":"1.5","4":"0.4","5":"setosa","6":"0.034"},{"1":"4.6","2":"3.6","3":"1.0","4":"0.2","5":"setosa","6":"0.583"},{"1":"5.1","2":"3.3","3":"1.7","4":"0.5","5":"setosa","6":"0.494"},{"1":"4.8","2":"3.4","3":"1.9","4":"0.2","5":"setosa","6":"0.860"},{"1":"5.0","2":"3.0","3":"1.6","4":"0.2","5":"setosa","6":"0.349"},{"1":"5.0","2":"3.4","3":"1.6","4":"0.4","5":"setosa","6":"0.706"},{"1":"5.2","2":"3.5","3":"1.5","4":"0.2","5":"setosa","6":"0.671"},{"1":"5.2","2":"3.4","3":"1.4","4":"0.2","5":"setosa","6":"0.818"},{"1":"4.7","2":"3.2","3":"1.6","4":"0.2","5":"setosa","6":"0.918"},{"1":"4.8","2":"3.1","3":"1.6","4":"0.2","5":"setosa","6":"0.712"},{"1":"5.4","2":"3.4","3":"1.5","4":"0.4","5":"setosa","6":"0.332"},{"1":"5.2","2":"4.1","3":"1.5","4":"0.1","5":"setosa","6":"0.993"},{"1":"5.5","2":"4.2","3":"1.4","4":"0.2","5":"setosa","6":"0.436"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.2","5":"setosa","6":"0.426"},{"1":"5.0","2":"3.2","3":"1.2","4":"0.2","5":"setosa","6":"0.582"},{"1":"5.5","2":"3.5","3":"1.3","4":"0.2","5":"setosa","6":"0.322"},{"1":"4.9","2":"3.6","3":"1.4","4":"0.1","5":"setosa","6":"0.543"},{"1":"4.4","2":"3.0","3":"1.3","4":"0.2","5":"setosa","6":"0.777"},{"1":"5.1","2":"3.4","3":"1.5","4":"0.2","5":"setosa","6":"0.756"},{"1":"5.0","2":"3.5","3":"1.3","4":"0.3","5":"setosa","6":"0.110"},{"1":"4.5","2":"2.3","3":"1.3","4":"0.3","5":"setosa","6":"0.329"},{"1":"4.4","2":"3.2","3":"1.3","4":"0.2","5":"setosa","6":"0.724"},{"1":"5.0","2":"3.5","3":"1.6","4":"0.6","5":"setosa","6":"0.801"},{"1":"5.1","2":"3.8","3":"1.9","4":"0.4","5":"setosa","6":"0.823"},{"1":"4.8","2":"3.0","3":"1.4","4":"0.3","5":"setosa","6":"0.675"},{"1":"5.1","2":"3.8","3":"1.6","4":"0.2","5":"setosa","6":"0.884"},{"1":"4.6","2":"3.2","3":"1.4","4":"0.2","5":"setosa","6":"0.509"},{"1":"5.3","2":"3.7","3":"1.5","4":"0.2","5":"setosa","6":"0.365"},{"1":"5.0","2":"3.3","3":"1.4","4":"0.2","5":"setosa","6":"0.988"},{"1":"7.0","2":"3.2","3":"4.7","4":"1.4","5":"versicolor","6":"0.171"},{"1":"6.4","2":"3.2","3":"4.5","4":"1.5","5":"versicolor","6":"0.088"},{"1":"6.9","2":"3.1","3":"4.9","4":"1.5","5":"versicolor","6":"0.611"},{"1":"5.5","2":"2.3","3":"4.0","4":"1.3","5":"versicolor","6":"0.830"},{"1":"6.5","2":"2.8","3":"4.6","4":"1.5","5":"versicolor","6":"0.058"},{"1":"5.7","2":"2.8","3":"4.5","4":"1.3","5":"versicolor","6":"0.572"},{"1":"6.3","2":"3.3","3":"4.7","4":"1.6","5":"versicolor","6":"0.931"},{"1":"4.9","2":"2.4","3":"3.3","4":"1.0","5":"versicolor","6":"0.034"},{"1":"6.6","2":"2.9","3":"4.6","4":"1.3","5":"versicolor","6":"0.728"},{"1":"5.2","2":"2.7","3":"3.9","4":"1.4","5":"versicolor","6":"0.588"},{"1":"5.0","2":"2.0","3":"3.5","4":"1.0","5":"versicolor","6":"0.025"},{"1":"5.9","2":"3.0","3":"4.2","4":"1.5","5":"versicolor","6":"0.617"},{"1":"6.0","2":"2.2","3":"4.0","4":"1.0","5":"versicolor","6":"0.079"},{"1":"6.1","2":"2.9","3":"4.7","4":"1.4","5":"versicolor","6":"0.588"},{"1":"5.6","2":"2.9","3":"3.6","4":"1.3","5":"versicolor","6":"0.344"},{"1":"6.7","2":"3.1","3":"4.4","4":"1.4","5":"versicolor","6":"0.591"},{"1":"5.6","2":"3.0","3":"4.5","4":"1.5","5":"versicolor","6":"0.390"},{"1":"5.8","2":"2.7","3":"4.1","4":"1.0","5":"versicolor","6":"0.318"},{"1":"6.2","2":"2.2","3":"4.5","4":"1.5","5":"versicolor","6":"0.652"},{"1":"5.6","2":"2.5","3":"3.9","4":"1.1","5":"versicolor","6":"0.001"},{"1":"5.9","2":"3.2","3":"4.8","4":"1.8","5":"versicolor","6":"0.190"},{"1":"6.1","2":"2.8","3":"4.0","4":"1.3","5":"versicolor","6":"0.590"},{"1":"6.3","2":"2.5","3":"4.9","4":"1.5","5":"versicolor","6":"0.074"},{"1":"6.1","2":"2.8","3":"4.7","4":"1.2","5":"versicolor","6":"0.351"},{"1":"6.4","2":"2.9","3":"4.3","4":"1.3","5":"versicolor","6":"0.353"},{"1":"6.6","2":"3.0","3":"4.4","4":"1.4","5":"versicolor","6":"0.596"},{"1":"6.8","2":"2.8","3":"4.8","4":"1.4","5":"versicolor","6":"0.093"},{"1":"6.7","2":"3.0","3":"5.0","4":"1.7","5":"versicolor","6":"0.516"},{"1":"6.0","2":"2.9","3":"4.5","4":"1.5","5":"versicolor","6":"0.215"},{"1":"5.7","2":"2.6","3":"3.5","4":"1.0","5":"versicolor","6":"0.955"},{"1":"5.5","2":"2.4","3":"3.8","4":"1.1","5":"versicolor","6":"0.471"},{"1":"5.5","2":"2.4","3":"3.7","4":"1.0","5":"versicolor","6":"0.189"},{"1":"5.8","2":"2.7","3":"3.9","4":"1.2","5":"versicolor","6":"0.490"},{"1":"6.0","2":"2.7","3":"5.1","4":"1.6","5":"versicolor","6":"0.110"},{"1":"5.4","2":"3.0","3":"4.5","4":"1.5","5":"versicolor","6":"0.232"},{"1":"6.0","2":"3.4","3":"4.5","4":"1.6","5":"versicolor","6":"0.527"},{"1":"6.7","2":"3.1","3":"4.7","4":"1.5","5":"versicolor","6":"0.009"},{"1":"6.3","2":"2.3","3":"4.4","4":"1.3","5":"versicolor","6":"0.589"},{"1":"5.6","2":"3.0","3":"4.1","4":"1.3","5":"versicolor","6":"0.839"},{"1":"5.5","2":"2.5","3":"4.0","4":"1.3","5":"versicolor","6":"0.174"},{"1":"5.5","2":"2.6","3":"4.4","4":"1.2","5":"versicolor","6":"0.390"},{"1":"6.1","2":"3.0","3":"4.6","4":"1.4","5":"versicolor","6":"0.438"},{"1":"5.8","2":"2.6","3":"4.0","4":"1.2","5":"versicolor","6":"0.491"},{"1":"5.0","2":"2.3","3":"3.3","4":"1.0","5":"versicolor","6":"0.457"},{"1":"5.6","2":"2.7","3":"4.2","4":"1.3","5":"versicolor","6":"0.546"},{"1":"5.7","2":"3.0","3":"4.2","4":"1.2","5":"versicolor","6":"0.293"},{"1":"5.7","2":"2.9","3":"4.2","4":"1.3","5":"versicolor","6":"0.842"},{"1":"6.2","2":"2.9","3":"4.3","4":"1.3","5":"versicolor","6":"0.478"},{"1":"5.1","2":"2.5","3":"3.0","4":"1.1","5":"versicolor","6":"0.554"},{"1":"5.7","2":"2.8","3":"4.1","4":"1.3","5":"versicolor","6":"0.458"},{"1":"6.3","2":"3.3","3":"6.0","4":"2.5","5":"virginica","6":"0.421"},{"1":"5.8","2":"2.7","3":"5.1","4":"1.9","5":"virginica","6":"0.827"},{"1":"7.1","2":"3.0","3":"5.9","4":"2.1","5":"virginica","6":"0.441"},{"1":"6.3","2":"2.9","3":"5.6","4":"1.8","5":"virginica","6":"0.180"},{"1":"6.5","2":"3.0","3":"5.8","4":"2.2","5":"virginica","6":"0.344"},{"1":"7.6","2":"3.0","3":"6.6","4":"2.1","5":"virginica","6":"0.242"},{"1":"4.9","2":"2.5","3":"4.5","4":"1.7","5":"virginica","6":"0.373"},{"1":"7.3","2":"2.9","3":"6.3","4":"1.8","5":"virginica","6":"0.556"},{"1":"6.7","2":"2.5","3":"5.8","4":"1.8","5":"virginica","6":"0.713"},{"1":"7.2","2":"3.6","3":"6.1","4":"2.5","5":"virginica","6":"0.345"},{"1":"6.5","2":"3.2","3":"5.1","4":"2.0","5":"virginica","6":"0.373"},{"1":"6.4","2":"2.7","3":"5.3","4":"1.9","5":"virginica","6":"0.208"},{"1":"6.8","2":"3.0","3":"5.5","4":"2.1","5":"virginica","6":"0.588"},{"1":"5.7","2":"2.5","3":"5.0","4":"2.0","5":"virginica","6":"0.220"},{"1":"5.8","2":"2.8","3":"5.1","4":"2.4","5":"virginica","6":"0.362"},{"1":"6.4","2":"3.2","3":"5.3","4":"2.3","5":"virginica","6":"0.115"},{"1":"6.5","2":"3.0","3":"5.5","4":"1.8","5":"virginica","6":"0.629"},{"1":"7.7","2":"3.8","3":"6.7","4":"2.2","5":"virginica","6":"0.216"},{"1":"7.7","2":"2.6","3":"6.9","4":"2.3","5":"virginica","6":"0.115"},{"1":"6.0","2":"2.2","3":"5.0","4":"1.5","5":"virginica","6":"0.663"},{"1":"6.9","2":"3.2","3":"5.7","4":"2.3","5":"virginica","6":"0.823"},{"1":"5.6","2":"2.8","3":"4.9","4":"2.0","5":"virginica","6":"0.102"},{"1":"7.7","2":"2.8","3":"6.7","4":"2.0","5":"virginica","6":"0.592"},{"1":"6.3","2":"2.7","3":"4.9","4":"1.8","5":"virginica","6":"0.260"},{"1":"6.7","2":"3.3","3":"5.7","4":"2.1","5":"virginica","6":"0.082"},{"1":"7.2","2":"3.2","3":"6.0","4":"1.8","5":"virginica","6":"0.694"},{"1":"6.2","2":"2.8","3":"4.8","4":"1.8","5":"virginica","6":"0.051"},{"1":"6.1","2":"3.0","3":"4.9","4":"1.8","5":"virginica","6":"0.885"},{"1":"6.4","2":"2.8","3":"5.6","4":"2.1","5":"virginica","6":"0.860"},{"1":"7.2","2":"3.0","3":"5.8","4":"1.6","5":"virginica","6":"0.008"},{"1":"7.4","2":"2.8","3":"6.1","4":"1.9","5":"virginica","6":"0.917"},{"1":"7.9","2":"3.8","3":"6.4","4":"2.0","5":"virginica","6":"0.158"},{"1":"6.4","2":"2.8","3":"5.6","4":"2.2","5":"virginica","6":"0.751"},{"1":"6.3","2":"2.8","3":"5.1","4":"1.5","5":"virginica","6":"0.922"},{"1":"6.1","2":"2.6","3":"5.6","4":"1.4","5":"virginica","6":"0.924"},{"1":"7.7","2":"3.0","3":"6.1","4":"2.3","5":"virginica","6":"0.565"},{"1":"6.3","2":"3.4","3":"5.6","4":"2.4","5":"virginica","6":"0.402"},{"1":"6.4","2":"3.1","3":"5.5","4":"1.8","5":"virginica","6":"0.219"},{"1":"6.0","2":"3.0","3":"4.8","4":"1.8","5":"virginica","6":"0.272"},{"1":"6.9","2":"3.1","3":"5.4","4":"2.1","5":"virginica","6":"0.105"},{"1":"6.7","2":"3.1","3":"5.6","4":"2.4","5":"virginica","6":"0.028"},{"1":"6.9","2":"3.1","3":"5.1","4":"2.3","5":"virginica","6":"0.341"},{"1":"5.8","2":"2.7","3":"5.1","4":"1.9","5":"virginica","6":"0.101"},{"1":"6.8","2":"3.2","3":"5.9","4":"2.3","5":"virginica","6":"0.295"},{"1":"6.7","2":"3.3","3":"5.7","4":"2.5","5":"virginica","6":"0.750"},{"1":"6.7","2":"3.0","3":"5.2","4":"2.3","5":"virginica","6":"0.616"},{"1":"6.3","2":"2.5","3":"5.0","4":"1.9","5":"virginica","6":"0.562"},{"1":"6.5","2":"3.0","3":"5.2","4":"2.0","5":"virginica","6":"0.077"},{"1":"6.2","2":"3.4","3":"5.4","4":"2.3","5":"virginica","6":"0.163"},{"1":"5.9","2":"3.0","3":"5.1","4":"1.8","5":"virginica","6":"0.817"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>O próximo passo é criar um modelo. Usaremos a função nativa <code>lm()</code>, selecionando a variável <code>Predação</code> como variável resposta e as demais (<code>.</code>) como preditoras. Em seguidas, vamos aplicar a função nativa <code>summary()</code> para extrair as estatísticas do modelo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(Predação <span class="sc">~</span> ., <span class="at">data =</span> iris_pred <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(dplyr<span class="sc">::</span><span class="fu">where</span>(is.numeric))) </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>modelo <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Predação ~ ., data = iris_pred %&gt;% dplyr::select(dplyr::where(is.numeric)))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.52639 -0.23185 -0.00145  0.22223  0.51027 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)   0.47101    0.25748   1.829   0.0694 .
+Sepal.Length -0.04245    0.07246  -0.586   0.5589  
+Sepal.Width   0.07404    0.07503   0.987   0.3254  
+Petal.Length  0.06307    0.07146   0.883   0.3789  
+Petal.Width  -0.18009    0.11873  -1.517   0.1315  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.2754 on 145 degrees of freedom
+Multiple R-squared:  0.07036,   Adjusted R-squared:  0.04472 
+F-statistic: 2.744 on 4 and 145 DF,  p-value: 0.03077</code></pre>
+</div>
+</div>
+<p>O modelo se apresentou como significativo (F<sub>(6,</sub> <sub>143)</sub> = 2,188, p = 0,047), mas com um poder de explicação baixo, explicando apenas 4% da variação (R<sup>2</sup> = 0,04). Uma coisa interessante desse modelo foi que nenhuma das variáveis preditoras foram significativas (coeficientes estimados baixos, estatísticas <em>t</em> baixas e p &gt; 0,05). Esse efeito ocorre quando o modelo sofre de multicolinearidade. Pelos índices de correlação previamente feitos, sabemos que esse conjunto de dados apresentam multicolinearidade. Vamos então testar se o VIF apresenta as mesmas variáveis a serem removidas, utilizamos a função <code>car::vif()</code>, do pacote <code>car</code>, utilizando nosso modelo como os dados que entrarão na função. Vamos utilizar o ponto de corte como 5 para o VIF.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'car'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    some</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="sc">%&gt;%</span> car<span class="sc">::</span><span class="fu">vif</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+    7.072722     2.100872    31.261498    16.090175 </code></pre>
+</div>
+</div>
+<p>Assim como nos índices de correlação, as variáveis que mais inflaram o modelo foram as relacionadas às pétalas (VIF<sub>Petal.Length</sub> = 31,26; VIF<sub>Petal.Width</sub> = 16,09). O comprimento da sépala (<code>Sepal.Length</code>) apresentou um valor de VIF maior que o ponto de corte estabelecido (VIF<sub>Sepal.Length</sub> = 7,07). Contudo, ela está mais próxima do ponto de corte que as variáveis de comprimento e largura da pétala. Então vamos remover apenas as variáveis sobre pétalas, e ver se a multicolinearidade some por completo. Vamos criar outro modelo, apenas com dados sobre sépalas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>modelo2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Predação <span class="sc">~</span> Sepal.Length <span class="sc">+</span> Sepal.Width, <span class="at">data =</span> iris_pred)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>modelo2 <span class="sc">%&gt;%</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Predação ~ Sepal.Length + Sepal.Width, data = iris_pred)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.53020 -0.21721 -0.03024  0.21384  0.56069 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)   0.59334    0.24091   2.463   0.0149 *
+Sepal.Length -0.06072    0.02754  -2.205   0.0290 *
+Sepal.Width   0.07582    0.05232   1.449   0.1494  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.2764 on 147 degrees of freedom
+Multiple R-squared:  0.05052,   Adjusted R-squared:  0.0376 
+F-statistic: 3.911 on 2 and 147 DF,  p-value: 0.02214</code></pre>
+</div>
+</div>
+<p>Note que agora o modelo está mais ajustado (F<sub>(2,</sub> <sub>147)</sub> = 3,911, p = 0,022), apesar de explicar menos agora (R<sup>2</sup> = 0,037). Contudo, note também que agora uma das variáveis, o comprimento da sépala, se tornou significativa para o modelo (t = -2,20, p = 0,029), apesar do coeficiente estimado baixo (-0,06 <span class="math inline">\(\pm\)</span> 0,027). Vamos testar se a multicolinearidade sumiu com completo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(modelo2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sepal.Length  Sepal.Width 
+    1.014016     1.014016 </code></pre>
+</div>
+</div>
+<p>Agora sim a multicolinearidade sumiu por completo. Ambas as variáveis não apenas estão dentro do ponto de corte estabelecido, como apresentam os mesmos valores (VIF<sub>Sepal.Length,</sub> <sub>Sepal.Width</sub> = 1,01).</p>
+<p>Um ponto importante sobre o VIF, é que o valores das variáveis do modelo não mudam, não importa qual seja a variável resposta, desde que sejam os mesmos valores das variáveis preditoras. Por causa disso, é possível calcular o VIF sejam criar modelos, apenas utilizando suas variáveis. Utilizando novamente uma função chamada <code>usdm::vif()</code>, mas agora do pacote <code>usdm</code>, é possível calcular o VIF apenas com os dados das variáveis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(usdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: terra</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>terra 1.7.71</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'terra'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:tidyr':
+
+    extract</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'usdm'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:car':
+
+    vif</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dplyr<span class="sc">::</span><span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  usdm<span class="sc">::</span><span class="fu">vif</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Variables"],"name":[1],"type":["chr"],"align":["left"]},{"label":["VIF"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Sepal.Length","2":"7.072722"},{"1":"Sepal.Width","2":"2.100872"},{"1":"Petal.Length","2":"31.261498"},{"1":"Petal.Width","2":"16.090175"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Sobre a escolha entre as funções car::vif() e usdm::vif()">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Sobre a escolha entre as funções car::vif() e usdm::vif()
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Por mais que sim mais simples utilizar a função <code>usdm::vif()</code>, ainda é recomendado utilizar a função <code>car::vif()</code>, principalmente quando se quer avaliar os efeitos da multicolinearidade nas estatísticas dos modelos.</p>
+</div>
+</div>
+<p>Um cuidado muito importante na escolha entre índices de correlação e VIF é que o VIF gera apenas relações matemáticas de inflação de modelo, mas ele pode apontar que uma variável menos interessante, do ponto de vista biológico e ecológico, deveria ser removida, enquanto uma vaariável menos interessante deveria permanecer, enquanto que nos índices de correlação ainda é possível fazer esta análise de escolha. Por isso, o VIF é recomendo em duas principais situações, sendo a segunda a mais importante:</p>
+<ol type="1">
+<li><p>Conjunto muito grandes de variáveis, onde escolher, de forma manual, pode ser muito trabalhoso, e dificil de analisar multiplas combinações;</p></li>
+<li><p>Principalmente em conjunto de variáveis que possuem a mesma importância biológica e ecológica para tentar explicar o fenômeno estudado, ou importâncias muito semelhantes, onde a remoção de qualquer variável não afetará o poder de explicação biológica e ecológica do modelo.</p></li>
+</ol>
+</section>
+</section>
+<section id="redução-através-análises-de-ordenação-irrestrita" class="level2">
+<h2 class="anchored" data-anchor-id="redução-através-análises-de-ordenação-irrestrita">Redução através análises de ordenação irrestrita</h2>
+<section id="análise-de-componentes-principais-principal-components-analysis---pca" class="level3">
+<h3 class="anchored" data-anchor-id="análise-de-componentes-principais-principal-components-analysis---pca">Análise de Componentes Principais (<em>Principal Components Analysis</em> - PCA)</h3>
+</section>
+<section id="análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa" class="level3">
+<h3 class="anchored" data-anchor-id="análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa">Análise de Coordenadas Principais (<em>Principal Coordinates Analysis</em> - PCoA)</h3>
+</section>
+</section>
+</section>
+<section id="contribuição-para-o-modelo" class="level1">
+<h1><strong>Contribuição para o modelo</strong></h1>
+<section id="estatísticas-de-variáveis-em-testes-de-hipótese-coeficiente-estimado-erro-padrão-e-estatísticas-t-e-z" class="level2">
+<h2 class="anchored" data-anchor-id="estatísticas-de-variáveis-em-testes-de-hipótese-coeficiente-estimado-erro-padrão-e-estatísticas-t-e-z">Estatísticas de variáveis em testes de hipótese (coeficiente estimado, erro padrão e estatísticas <em>T</em> e <em>Z</em>)</h2>
+</section>
+<section id="variáveis-mais-importantes-para-análises-de-ordenação-irrestrita" class="level2">
+<h2 class="anchored" data-anchor-id="variáveis-mais-importantes-para-análises-de-ordenação-irrestrita">Variáveis mais importantes para análises de ordenação irrestrita</h2>
+<section id="análise-de-componentes-principais-principal-components-analysis---pca-1" class="level3">
+<h3 class="anchored" data-anchor-id="análise-de-componentes-principais-principal-components-analysis---pca-1">Análise de Componentes Principais (<em>Principal Components Analysis</em> - PCA)</h3>
+</section>
+<section id="análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa-1" class="level3">
+<h3 class="anchored" data-anchor-id="análise-de-coordenadas-principais-principal-coordinates-analysis---pcoa-1">Análise de Coordenadas Principais (<em>Principal Coordinates Analysis</em> - PCoA)</h3>
+</section>
+</section>
+<section id="variáveis-mais-importantes-para-análises-de-ordenação-restrita" class="level2">
+<h2 class="anchored" data-anchor-id="variáveis-mais-importantes-para-análises-de-ordenação-restrita">Variáveis mais importantes para análises de ordenação restrita</h2>
+<section id="análise-de-redundância-redundancy-analysis---rda" class="level3">
+<h3 class="anchored" data-anchor-id="análise-de-redundância-redundancy-analysis---rda">Análise de Redundância (<em>Redundancy Analysis</em> - RDA)</h3>
+</section>
+<section id="análise-de-variância-multivariada-com-permutação-permutation-multivariaed-anova---permanova" class="level3">
+<h3 class="anchored" data-anchor-id="análise-de-variância-multivariada-com-permutação-permutation-multivariaed-anova---permanova">Análise de Variância Multivariada com Permutação (<em>Permutation Multivariaed ANOVA</em> - PERMANOVA)</h3>
+</section>
+</section>
+</section>
+<section id="análises-baseadas-em-simplicidade-dos-modelos" class="level1">
+<h1><strong>Análises baseadas em simplicidade dos modelos</strong></h1>
+<section id="teste-de-grau-de-verossimilhança-likelyhood-ratio-test---lrt" class="level2">
+<h2 class="anchored" data-anchor-id="teste-de-grau-de-verossimilhança-likelyhood-ratio-test---lrt">Teste de Grau de Verossimilhança (<em>Likelyhood Ratio Test</em> - LRT)</h2>
+</section>
+<section id="critério-de-informação-de-akaike-akaike-information-criterium---aic-e-critério-de-informação-bayesiana-bayesian-information-criterium---bic" class="level2">
+<h2 class="anchored" data-anchor-id="critério-de-informação-de-akaike-akaike-information-criterium---aic-e-critério-de-informação-bayesiana-bayesian-information-criterium---bic">Critério de Informação de Akaike (<em>Akaike Information Criterium</em> - AIC) e Critério de informação Bayesiana (<em>Bayesian Information Criterium</em> - BIC)</h2>
+</section>
+</section>
+<section id="não-existe-modelo-perfeito" class="level1">
+<h1><strong>Não existe modelo perfeito</strong></h1>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
